@@ -21,13 +21,20 @@ under_odds = st.sidebar.number_input("Under Odds (decimal)", min_value=1.0, step
 if 'prop_data' not in st.session_state:
     st.session_state.prop_data = []
 
-if st.sidebar.button("➕ Add Prop"):
+if over_odds != 0 and under_odds != 0 and book_line != 0:
     implied_prob_over = round(1 / over_odds, 3)
     implied_prob_under = round(1 / under_odds, 3)
+
     ev_over = round((over_odds * (projection / book_line)) - 1, 3)
     ev_under = round((under_odds * (1 - (projection / book_line))) - 1, 3)
+
     best_bet = "Over" if ev_over > ev_under else "Under"
     edge = round(max(ev_over, ev_under) * 100, 2)
+    
+    st.success(f"✅ Best Bet: **{best_bet}** — Edge: **{edge}%**")
+else:
+    st.warning("⚠️ Please enter valid odds and a non-zero book line.")
+
 
     # Step C: Tier Tagging System
     if edge >= 25:
